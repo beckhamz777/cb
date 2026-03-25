@@ -18,7 +18,7 @@ export default function AndroidPage() {
             Deploy the world's most secure financial ledger to your mobile environment. Version 2.4.1 introduces hardware-level encryption protocols and a refined architectural interface.
           </p>
           <div className="flex flex-col sm:flex-row items-center lg:items-start gap-6 justify-center lg:justify-start">
-            <a href="https://github.com/beckhamz777/ManagementSYSJ_corrupt/releases/latest/download/CheckBook.apk" download="CheckBook.apk" className="group relative overflow-hidden bg-gradient-to-br from-primary to-primary-container text-white px-8 py-5 rounded-lg flex items-center gap-4 transition-all hover:scale-[1.02] active:scale-95 w-full sm:w-auto">
+            <a href="https://github.com/beckhamz777/cb/releases/latest/download/CheckBook.apk" download="CheckBook.apk" className="group relative overflow-hidden bg-gradient-to-br from-primary to-primary-container text-white px-8 py-5 rounded-lg flex items-center gap-4 transition-all hover:scale-[1.02] active:scale-95 w-full sm:w-auto">
               <Smartphone className="w-8 h-8" />
               <div className="text-left">
                 <div className="font-headline font-bold text-xl leading-none">Download APK</div>

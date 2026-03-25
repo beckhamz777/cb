@@ -37,7 +37,7 @@ export default function WindowsPage() {
             <div className="relative z-10">
               <h3 className="text-sm font-bold uppercase tracking-widest text-on-surface-variant mb-2">LATEST STABLE RELEASE</h3>
               <div className="flex flex-col md:flex-row md:items-center gap-6">
-                <a href="https://github.com/beckhamz777/ManagementSYSJ_corrupt/releases/latest/download/METO_IMS-1.6.msi" download className="w-full md:w-auto px-8 py-5 bg-gradient-to-br from-primary to-primary-container text-white rounded-lg font-headline font-bold text-lg flex items-center justify-center gap-3 active:scale-95 transition-all shadow-lg shadow-primary/10">
+                <a href="https://github.com/beckhamz777/cb/releases/latest/download/METO_IMS-1.6.msi" download className="w-full md:w-auto px-8 py-5 bg-gradient-to-br from-primary to-primary-container text-white rounded-lg font-headline font-bold text-lg flex items-center justify-center gap-3 active:scale-95 transition-all shadow-lg shadow-primary/10">
                   <Download className="w-6 h-6" />
                   Download for Windows (.msi)
                 </a>
