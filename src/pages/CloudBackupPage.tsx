@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { 
   Cloud, 
@@ -12,12 +12,43 @@ import {
   Lock,
   Smartphone as PhoneIcon,
   Database,
-  History
+  History,
+  Loader2,
+  Mail,
+  Phone,
+  MessageCircle
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { supabase } from '@/src/lib/supabase';
 import mtnLogo from '@/src/assets/mtn momo.png';
 
 export default function CloudBackupPage() {
   const [billingCycle, setBillingCycle] = useState<'monthly'>('monthly');
+  const [email, setEmail] = useState('');
+  const [user, setUser] = useState<any>(null);
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser(session.user);
+        setEmail(session.user.email || '');
+      }
+      setIsAuthChecking(false);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setUser(session.user);
+        setEmail(session.user.email || '');
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
 
   const features = [
     {
@@ -123,11 +154,49 @@ export default function CloudBackupPage() {
                     <span className="font-bold text-primary">Monthly</span>
                   </div>
                   
-                  <button className="w-full architectural-gradient text-white font-bold py-5 rounded-xl flex items-center justify-center gap-3 hover:opacity-95 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 text-lg">
-                    <PhoneIcon className="w-6 h-6" />
-                    Proceed to Payment
-                    <ArrowRight className="w-5 h-5" />
-                  </button>
+                  {isAuthChecking ? (
+                    <div className="py-8 flex justify-center">
+                      <Loader2 className="w-8 h-8 text-primary animate-spin" />
+                    </div>
+                  ) : !user ? (
+                    <div className="py-8 text-center space-y-4">
+                      <Lock className="w-12 h-12 text-outline mx-auto" />
+                      <h3 className="font-bold text-primary text-lg">Authentication Required</h3>
+                      <p className="text-sm text-on-surface-variant leading-relaxed">
+                        You must be safely authenticated to your vault in order to upgrade your subscription.
+                      </p>
+                      <Link to="/login" className="w-full bg-primary text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 mt-4">
+                        Proceed to Login
+                        <ArrowRight className="w-5 h-5" />
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="space-y-6 pt-4">
+                      <div className="bg-surface-container-high rounded-xl p-6 text-center space-y-4 shadow-inner border border-outline-variant/20">
+                         <p className="text-on-surface-variant text-sm font-medium">
+                           Send <span className="font-bold text-primary">15,000 UGX</span> to the MTN Number below:
+                         </p>
+                         <div className="text-4xl font-black font-headline tracking-widest text-primary my-4">
+                           076 031 5703
+                         </div>
+                         <p className="text-xs text-outline uppercase tracking-wider font-bold bg-white inline-block px-3 py-1 rounded-full border border-outline-variant/30 shadow-sm">
+                           Name: Oworinawe Prince Beckham
+                         </p>
+                      </div>
+
+                      <div className="flex items-center gap-4 bg-secondary-container/50 text-on-secondary-container p-5 rounded-xl border border-secondary-container">
+                        <MessageCircle className="w-8 h-8 flex-shrink-0 text-primary" />
+                        <p className="text-sm font-medium leading-relaxed">
+                          After sending, please WhatsApp your receipt footprint and your account email <strong>{email}</strong> to <strong className="text-primary text-base">076 031 5702</strong> for immediate cloud activation.
+                        </p>
+                      </div>
+                      
+                      <Link to="/dashboard" className="w-full bg-primary text-white font-bold py-5 rounded-xl flex items-center justify-center gap-3 hover:opacity-95 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 text-lg mt-6">
+                        Return to Dashboard
+                        <ArrowRight className="w-5 h-5" />
+                      </Link>
+                    </div>
+                  )}
 
                   <div className="flex flex-col items-center gap-4">
                     <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-outline">Powered by</span>
