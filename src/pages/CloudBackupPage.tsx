@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { 
-  Cloud, 
-  RefreshCw, 
-  Image as ImageIcon, 
-  Smartphone, 
-  Monitor, 
-  ShieldCheck, 
-  ArrowRight, 
-  CheckCircle2, 
+import {
+  Cloud,
+  RefreshCw,
+  Image as ImageIcon,
+  Smartphone,
+  Monitor,
+  ShieldCheck,
+  ArrowRight,
+  CheckCircle2,
   Lock,
   Smartphone as PhoneIcon,
   Database,
@@ -86,7 +86,7 @@ export default function CloudBackupPage() {
             <Cloud className="w-4 h-4" />
             OPTIONAL ADD-ON
           </motion.div>
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
@@ -94,7 +94,7 @@ export default function CloudBackupPage() {
           >
             Cloud Backup & <br /> Multi-Device Sync
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
@@ -106,7 +106,7 @@ export default function CloudBackupPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           {/* Subscription Card */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5 }}
@@ -128,7 +128,7 @@ export default function CloudBackupPage() {
                   <span className="text-xl font-bold opacity-60">UGX / Month</span>
                 </div>
               </div>
-              
+
               <div className="p-8 md:p-10 space-y-8">
                 <div className="space-y-4">
                   {[
@@ -153,7 +153,7 @@ export default function CloudBackupPage() {
                     </div>
                     <span className="font-bold text-primary">Monthly</span>
                   </div>
-                  
+
                   {isAuthChecking ? (
                     <div className="py-8 flex justify-center">
                       <Loader2 className="w-8 h-8 text-primary animate-spin" />
@@ -173,24 +173,24 @@ export default function CloudBackupPage() {
                   ) : (
                     <div className="space-y-6 pt-4">
                       <div className="bg-surface-container-high rounded-xl p-6 text-center space-y-4 shadow-inner border border-outline-variant/20">
-                         <p className="text-on-surface-variant text-sm font-medium">
-                           Send <span className="font-bold text-primary">15,000 UGX</span> to the MTN Number below:
-                         </p>
-                         <div className="text-4xl font-black font-headline tracking-widest text-primary my-4">
-                           076 031 5703
-                         </div>
-                         <p className="text-xs text-outline uppercase tracking-wider font-bold bg-white inline-block px-3 py-1 rounded-full border border-outline-variant/30 shadow-sm">
-                           Name: Oworinawe Prince Beckham
-                         </p>
+                        <p className="text-on-surface-variant text-sm font-medium">
+                          Send <span className="font-bold text-primary">15,000 UGX</span> to the MTN Number below:
+                        </p>
+                        <div className="text-4xl font-black font-headline tracking-widest text-primary my-4">
+                          076 031 5703
+                        </div>
+                        <p className="text-xs text-outline uppercase tracking-wider font-bold bg-white inline-block px-3 py-1 rounded-full border border-outline-variant/30 shadow-sm">
+                          Name: Oworinawe Prince Beckham
+                        </p>
                       </div>
 
                       <div className="flex items-center gap-4 bg-secondary-container/50 text-on-secondary-container p-5 rounded-xl border border-secondary-container">
                         <MessageCircle className="w-8 h-8 flex-shrink-0 text-primary" />
                         <p className="text-sm font-medium leading-relaxed">
-                          After sending, please WhatsApp your receipt footprint and your account email <strong>{email}</strong> to <strong className="text-primary text-base">076 031 5702</strong> for immediate cloud activation.
+                          After sending, please WhatsApp your receipt footprint and your account email <strong>{email}</strong> to <strong className="text-primary text-base">076 031 5703</strong> for immediate cloud activation.
                         </p>
                       </div>
-                      
+
                       <Link to="/dashboard" className="w-full bg-primary text-white font-bold py-5 rounded-xl flex items-center justify-center gap-3 hover:opacity-95 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 text-lg mt-6">
                         Return to Dashboard
                         <ArrowRight className="w-5 h-5" />
@@ -212,7 +212,7 @@ export default function CloudBackupPage() {
                 </div>
               </div>
             </div>
-            
+
             <p className="text-center text-xs text-on-surface-variant mt-8 px-12 leading-relaxed">
               Payments are processed securely via MTN Mobile Money. Your subscription will automatically renew each month unless cancelled.
             </p>
@@ -222,7 +222,7 @@ export default function CloudBackupPage() {
           <div className="lg:col-span-7 space-y-12 order-2 lg:order-1">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {features.map((feature, i) => (
-                <motion.div 
+                <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
