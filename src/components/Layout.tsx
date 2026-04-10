@@ -47,7 +47,7 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Link to="/signup" className="p-2 hover:bg-surface-container rounded-full transition-colors">
+          <Link to="/checkout" className="p-2 hover:bg-surface-container rounded-full transition-colors">
             <User className="w-5 h-5 text-primary" />
           </Link>
           <button 
@@ -76,11 +76,11 @@ export function Navbar() {
             </Link>
           ))}
           <Link 
-            to="/signup" 
+            to="/checkout" 
             className="mt-2 py-3 bg-primary text-white text-center rounded-lg font-bold"
             onClick={() => setIsOpen(false)}
           >
-            Sign In
+            Sign In / Purchase
           </Link>
         </div>
       )}

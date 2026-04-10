@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import WindowsPage from './pages/WindowsPage';
 import AndroidPage from './pages/AndroidPage';
 import SignupPage from './pages/SignupPage';
+import LoginPage from './pages/LoginPage';
 import CheckoutPage from './pages/CheckoutPage';
 import SupportPage from './pages/SupportPage';
 import CloudBackupPage from './pages/CloudBackupPage';
@@ -19,6 +20,7 @@ function AppContent() {
           <Route path="/windows" element={<WindowsPage />} />
           <Route path="/android" element={<AndroidPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/support" element={<SupportPage />} />
           <Route path="/cloud-backup" element={<CloudBackupPage />} />
