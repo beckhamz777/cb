@@ -14,7 +14,7 @@ export default function CheckoutPage() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleApply = () => {
-    if (promoCode.trim().toUpperCase() === 'CHECKBOOK2024') {
+    if (promoCode.trim().toUpperCase() === 'CHECKBOOK2026') {
       setIsApplied(true);
     }
   };
@@ -31,7 +31,7 @@ export default function CheckoutPage() {
       email,
       password,
       options: {
-        data: { 
+        data: {
           pro_tier: false,
           account_status: 'unpaid'
         }
@@ -86,7 +86,7 @@ export default function CheckoutPage() {
                   <div className="relative flex-1">
                     <input
                       className="w-full bg-surface-container-high border-none rounded-lg pl-10 pr-4 py-3 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary/20 transition-all outline-none"
-                      placeholder="CHECKBOOK2024"
+                      placeholder="CHECKBOOK2026"
                       type="text"
                       value={promoCode}
                       onChange={(e) => setPromoCode(e.target.value)}
@@ -170,23 +170,23 @@ export default function CheckoutPage() {
                       <p className="text-xs opacity-80">Please complete your manual payment to activate CheckBook Pro.</p>
                     </div>
                   </div>
-                  
+
                   <div className="bg-surface-container-high rounded-xl p-6 text-center space-y-4 shadow-inner border border-outline-variant/20">
-                     <p className="text-on-surface-variant text-sm font-medium">
-                       Send <span className="font-bold text-primary">{isApplied ? '203,000' : '290,000'} UGX</span> to the MTN Number below:
-                     </p>
-                     <div className="text-4xl font-black font-headline tracking-widest text-primary my-4">
-                       076 031 5703
-                     </div>
-                     <p className="text-xs text-outline uppercase tracking-wider font-bold bg-white inline-block px-3 py-1 rounded-full border border-outline-variant/30 shadow-sm">
-                       Name: Oworinawe Prince Beckham
-                     </p>
+                    <p className="text-on-surface-variant text-sm font-medium">
+                      Send <span className="font-bold text-primary">{isApplied ? '203,000' : '290,000'} UGX</span> to the MTN Number below:
+                    </p>
+                    <div className="text-4xl font-black font-headline tracking-widest text-primary my-4">
+                      076 031 5703
+                    </div>
+                    <p className="text-xs text-outline uppercase tracking-wider font-bold bg-white inline-block px-3 py-1 rounded-full border border-outline-variant/30 shadow-sm">
+                      Name: Oworinawe Prince Beckham
+                    </p>
                   </div>
 
                   <div className="flex items-center gap-4 bg-secondary-container/50 text-on-secondary-container p-5 rounded-xl border border-secondary-container">
                     <MessageCircle className="w-8 h-8 flex-shrink-0 text-primary" />
                     <p className="text-sm font-medium leading-relaxed">
-                      After sending, please WhatsApp your receipt footprint and your account email <strong>{email}</strong> to <strong className="text-primary text-base">076 031 5702</strong> for immediate activation.
+                      After sending, please WhatsApp your receipt footprint and your account email <strong>{email}</strong> to <strong className="text-primary text-base">076 031 5703</strong> for immediate activation.
                     </p>
                   </div>
 

@@ -37,12 +37,12 @@ export default function WindowsPage() {
             <div className="relative z-10">
               <h3 className="text-sm font-bold uppercase tracking-widest text-on-surface-variant mb-2">LATEST STABLE RELEASE</h3>
               <div className="flex flex-col md:flex-row md:items-center gap-6">
-                <a href="https://github.com/beckhamz777/cb/releases/latest/download/METO.IMS-1.7.msi" download className="w-full md:w-auto px-8 py-5 bg-gradient-to-br from-primary to-primary-container text-white rounded-lg font-headline font-bold text-lg flex items-center justify-center gap-3 active:scale-95 transition-all shadow-lg shadow-primary/10">
+                <a href="https://github.com/beckhamz777/cb/releases/latest/download/METO.IMS-1.8.msi" download className="w-full md:w-auto px-8 py-5 bg-gradient-to-br from-primary to-primary-container text-white rounded-lg font-headline font-bold text-lg flex items-center justify-center gap-3 active:scale-95 transition-all shadow-lg shadow-primary/10">
                   <Download className="w-6 h-6" />
                   Download for Windows (.msi)
                 </a>
                 <div className="flex flex-col">
-                  <span className="text-on-surface font-bold text-lg">v1.7</span>
+                  <span className="text-on-surface font-bold text-lg">v1.8</span>
                   <span className="text-on-surface-variant text-sm">115MB • SHA-256 Verified</span>
                 </div>
               </div>
@@ -54,8 +54,8 @@ export default function WindowsPage() {
             <div className="space-y-4">
               <div className="p-6 bg-white rounded-lg border-l-4 border-secondary shadow-sm">
                 <div className="flex justify-between items-start mb-2">
-                  <h4 className="font-bold text-on-surface">Version 1.7 — Optimization Update</h4>
-                  <span className="text-xs text-on-surface-variant bg-surface-container px-2 py-1 rounded">Apr 12, 2026</span>
+                  <h4 className="font-bold text-on-surface">Version 1.8 — Latest Release</h4>
+                  <span className="text-xs text-on-surface-variant bg-surface-container px-2 py-1 rounded">Apr 15, 2026</span>
                 </div>
                 <ul className="space-y-2 text-on-surface-variant text-sm">
                   <li className="flex items-start gap-2">
