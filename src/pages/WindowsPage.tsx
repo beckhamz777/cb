@@ -55,20 +55,20 @@ export default function WindowsPage() {
               <div className="p-6 bg-white rounded-lg border-l-4 border-secondary shadow-sm">
                 <div className="flex justify-between items-start mb-2">
                   <h4 className="font-bold text-on-surface">Version 1.8 — Latest Release</h4>
-                  <span className="text-xs text-on-surface-variant bg-surface-container px-2 py-1 rounded">Apr 15, 2026</span>
+                  <span className="text-xs text-on-surface-variant bg-surface-container px-2 py-1 rounded">Apr 17, 2026</span>
                 </div>
                 <ul className="space-y-2 text-on-surface-variant text-sm">
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 text-secondary flex-shrink-0" />
+                    Fixed unit calculation digit-mangling bug in Sales and New Stock sections.
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-secondary flex-shrink-0" />
+                    Resolved 'item restoration' bug by refining cloud sync logic.
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-secondary flex-shrink-0" />
                     Enhanced cryptographic signing for Windows 11 kernel compatibility.
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-secondary flex-shrink-0" />
-                    Improved architectural vaulting speed by 14% on NVMe drives.
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-secondary flex-shrink-0" />
-                    Resolved a rendering artifact in the high-contrast dashboard mode.
                   </li>
                 </ul>
               </div>
