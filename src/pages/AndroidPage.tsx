@@ -15,14 +15,14 @@ export default function AndroidPage() {
             CheckBook for Android
           </h1>
           <p className="text-lg text-on-surface-variant max-w-xl mb-12 leading-relaxed">
-            Deploy the world's most secure financial ledger to your mobile environment. Version 2.4.1 introduces hardware-level encryption protocols and a refined architectural interface.
+            Deploy the world's most secure financial ledger to your mobile environment. Version 1.9 introduces a high-performance GZIP sync engine and a branded receipt generation system.
           </p>
           <div className="flex flex-col sm:flex-row items-center lg:items-start gap-6 justify-center lg:justify-start">
             <a href="https://github.com/beckhamz777/cb/releases/latest/download/CheckBook.apk" download="CheckBook.apk" className="group relative overflow-hidden bg-gradient-to-br from-primary to-primary-container text-white px-8 py-5 rounded-lg flex items-center gap-4 transition-all hover:scale-[1.02] active:scale-95 w-full sm:w-auto">
               <Smartphone className="w-8 h-8" />
               <div className="text-left">
                 <div className="font-headline font-bold text-xl leading-none">Download APK</div>
-                <div className="text-xs opacity-80 mt-1">v2.4.1 • 99.49MB • 64-bit ARM</div>
+                <div className="text-xs opacity-80 mt-1">v1.9 • 104MB • 64-bit ARM</div>
               </div>
             </a>
             <div className="flex flex-col">
@@ -30,7 +30,7 @@ export default function AndroidPage() {
                 <ShieldCheck className="w-5 h-5" />
                 SHA-256 Verified
               </span>
-              <span className="text-outline text-xs mt-1">Current Build: 2024.08.15-PRIME</span>
+              <span className="text-outline text-xs mt-1">Current Build: 2026.04.21-PRIME</span>
             </div>
           </div>
         </div>
