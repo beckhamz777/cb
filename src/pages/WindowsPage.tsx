@@ -42,7 +42,7 @@ export default function WindowsPage() {
                   Download for Windows (.msi)
                 </a>
                 <div className="flex flex-col">
-                  <span className="text-on-surface font-bold text-lg">v1.9</span>
+                  <span className="text-on-surface font-bold text-lg">v2.0</span>
                   <span className="text-on-surface-variant text-sm">118MB • SHA-256 Verified</span>
                 </div>
               </div>
@@ -54,13 +54,13 @@ export default function WindowsPage() {
             <div className="space-y-4">
               <div className="p-6 bg-white rounded-lg border-l-4 border-secondary shadow-sm">
                 <div className="flex justify-between items-start mb-2">
-                  <h4 className="font-bold text-on-surface">Version 1.9 — Major Update</h4>
-                  <span className="text-xs text-on-surface-variant bg-surface-container px-2 py-1 rounded">Apr 21, 2026</span>
+                  <h4 className="font-bold text-on-surface">Version 2.0 — Major Update</h4>
+                  <span className="text-xs text-on-surface-variant bg-surface-container px-2 py-1 rounded">Jul 05, 2026</span>
                 </div>
                 <ul className="space-y-2 text-on-surface-variant text-sm">
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 text-secondary flex-shrink-0" />
-                    Implemented GZIP database compression, reducing cloud sync traffic by 70%.
+                    Migrated from ZIP file backups to a highly efficient real-time Delta sync using tables and queries, ensuring instant multi-device syncing with zero data loss.
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="w-5 h-5 text-secondary flex-shrink-0" />
