@@ -22,7 +22,7 @@ export default function AndroidPage() {
               <Smartphone className="w-8 h-8" />
               <div className="text-left">
                 <div className="font-headline font-bold text-xl leading-none">Download APK</div>
-                <div className="text-xs opacity-80 mt-1">v2.1 • 104MB • 64-bit ARM</div>
+                <div className="text-xs opacity-80 mt-1">v2.2.0 (Build 4) • 67MB • 64-bit ARM</div>
               </div>
             </a>
             <div className="flex flex-col">
