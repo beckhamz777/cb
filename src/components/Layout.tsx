@@ -109,7 +109,7 @@ export function Footer() {
         <div className="flex flex-wrap justify-center gap-8 text-xs uppercase tracking-widest font-medium">
           <Link to="/cloud-backup" className="text-outline-variant/60 hover:text-secondary transition-colors">Cloud Backup</Link>
           <Link to="#" className="text-outline-variant/60 hover:text-secondary transition-colors">Privacy Policy</Link>
-          <Link to="#" className="text-outline-variant/60 hover:text-secondary transition-colors">Terms of Service</Link>
+          <Link to="/terms" className="text-outline-variant/60 hover:text-secondary transition-colors">Terms of Service</Link>
           <Link to="#" className="text-outline-variant/60 hover:text-secondary transition-colors">Security Audit</Link>
           <Link to="#" className="text-outline-variant/60 hover:text-secondary transition-colors">Status</Link>
           <Link to="#" className="text-outline-variant/60 hover:text-secondary transition-colors">Documentation</Link>

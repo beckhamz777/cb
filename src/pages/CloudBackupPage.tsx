@@ -21,6 +21,7 @@ import {
 import { Link } from 'react-router-dom';
 import { supabase } from '@/src/lib/supabase';
 import mtnLogo from '@/src/assets/mtn momo.png';
+import airtelLogo from '@/src/assets/airtel.png';
 import { initiatePesapalPayment, isCloudSubscriptionActive } from '@/src/services/pesapalService';
 
 export default function CloudBackupPage() {
@@ -37,14 +38,16 @@ export default function CloudBackupPage() {
   const [pesapalError, setPesapalError] = useState('');
 
   useEffect(() => {
-    setPaymentSuccess(isCloudSubscriptionActive());
-  }, []);
-
-  useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         setUser(session.user);
         setEmail(session.user.email || '');
+        const meta = session.user.user_metadata || {};
+        if (meta.cloud_active === true || isCloudSubscriptionActive()) {
+          setPaymentSuccess(true);
+        }
+      } else {
+        setPaymentSuccess(isCloudSubscriptionActive());
       }
       setIsAuthChecking(false);
     });
@@ -53,8 +56,13 @@ export default function CloudBackupPage() {
       if (session?.user) {
         setUser(session.user);
         setEmail(session.user.email || '');
+        const meta = session.user.user_metadata || {};
+        if (meta.cloud_active === true || isCloudSubscriptionActive()) {
+          setPaymentSuccess(true);
+        }
       } else {
         setUser(null);
+        setPaymentSuccess(isCloudSubscriptionActive());
       }
     });
 
@@ -238,7 +246,7 @@ export default function CloudBackupPage() {
                                 : 'bg-surface-container border-outline-variant/20 text-on-surface-variant hover:bg-surface-container-high'
                             }`}
                           >
-                            <div className="w-5 h-5 bg-red-600 rounded-full flex items-center justify-center text-white text-[10px] font-black">A</div>
+                            <img src={airtelLogo} alt="Airtel Money" className="h-6 object-contain" />
                             Airtel Money
                           </button>
                         </div>
@@ -287,7 +295,7 @@ export default function CloudBackupPage() {
                               window.location.href = res.redirectUrl;
                             }
                           } catch (err) {
-                            setPesapalError('Failed to initiate Pesapal payment. Please try again.');
+                            setPesapalError('Failed to initiate payment. Please try again.');
                           } finally {
                             setIsProcessingPayment(false);
                           }
@@ -298,7 +306,7 @@ export default function CloudBackupPage() {
                           <Loader2 className="w-5 h-5 animate-spin" />
                         ) : (
                           <>
-                            Pay 15,000 UGX with Pesapal
+                            Pay 15,000 UGX
                             <ArrowRight className="w-5 h-5" />
                           </>
                         )}
@@ -318,9 +326,12 @@ export default function CloudBackupPage() {
                     </div>
                   )}
 
-                  <div className="flex flex-col items-center gap-4">
+                  <div className="flex flex-col items-center gap-2">
                     <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-outline">Powered by</span>
-                    <img src={mtnLogo} alt="MTN MoMo" className="h-10 object-contain" />
+                    <div className="flex items-center justify-center gap-6">
+                      <img src={mtnLogo} alt="MTN MoMo" className="h-10 object-contain" />
+                      <img src={airtelLogo} alt="Airtel Money" className="h-10 object-contain" />
+                    </div>
                   </div>
                 </div>
 

@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { ShieldCheck, Smartphone, Tag, ArrowRight, CheckCircle2, Lock, Check, Loader2, Mail, Phone as PhoneIcon, MessageCircle, Award } from 'lucide-react';
+import { ShieldCheck, Smartphone, Tag, ArrowRight, CheckCircle2, Lock, Check, Loader2, Mail, Phone as PhoneIcon, MessageCircle, Award, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/src/lib/supabase';
 import mtnLogo from '@/src/assets/mtn momo.png';
-import { initiatePesapalPayment, isOwnershipActive } from '@/src/services/pesapalService';
+import airtelLogo from '@/src/assets/airtel.png';
+import { initiatePesapalPayment, isOwnershipActive, startFreeTrial, isFreeTrialActive } from '@/src/services/pesapalService';
 
 export default function CheckoutPage() {
   const [promoCode, setPromoCode] = useState('');
   const [isApplied, setIsApplied] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [step, setStep] = useState<'signup' | 'creating_account' | 'payment'>('signup');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -21,6 +23,36 @@ export default function CheckoutPage() {
   const [paymentSuccess, setPaymentSuccess] = useState(isOwnershipActive());
   const [pesapalError, setPesapalError] = useState('');
 
+  React.useEffect(() => {
+    async function checkUserOwnership() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          setEmail(session.user.email || '');
+          const meta = session.user.user_metadata || {};
+          const hasPaidOwnership =
+            meta.pro_tier === true ||
+            meta.ownership_active === true ||
+            meta.account_status === 'active' ||
+            isOwnershipActive();
+
+          if (hasPaidOwnership) {
+            setPaymentSuccess(true);
+            setStep('payment');
+          } else {
+            setStep('payment');
+          }
+        } else if (isOwnershipActive()) {
+          setPaymentSuccess(true);
+          setStep('payment');
+        }
+      } catch (err) {
+        console.warn('Failed to check user session:', err);
+      }
+    }
+    checkUserOwnership();
+  }, []);
+
   const handleApply = () => {
     if (promoCode.trim().toUpperCase() === 'CHECKBOOK2026') {
       setIsApplied(true);
@@ -30,6 +62,10 @@ export default function CheckoutPage() {
   const handleCreateAccount = async () => {
     if (!email || !password) {
       setErrorMessage('Please provide an email and password to secure your account.');
+      return;
+    }
+    if (password !== confirmPassword) {
+      setErrorMessage('Passwords do not match. Please verify your password.');
       return;
     }
     setErrorMessage('');
@@ -52,6 +88,12 @@ export default function CheckoutPage() {
       return;
     }
 
+    setStep('payment');
+  };
+
+  const handleStartTrial = () => {
+    startFreeTrial();
+    setPaymentSuccess(true);
     setStep('payment');
   };
 
@@ -153,12 +195,26 @@ export default function CheckoutPage() {
                         <Lock className="absolute right-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors w-4 h-4" />
                       </div>
                     </div>
+                    <div className="space-y-2">
+                      <label className="block text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Confirm Password</label>
+                      <div className="relative group">
+                        <input className="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="••••••••••••" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                        <Lock className="absolute right-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors w-4 h-4" />
+                      </div>
+                    </div>
                   </div>
 
-                  <button onClick={handleCreateAccount} className="w-full bg-primary text-white font-bold py-5 rounded-xl flex items-center justify-center gap-3 hover:opacity-95 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 text-lg mt-6">
-                    Create Account & Proceed
-                    <ArrowRight className="w-5 h-5" />
-                  </button>
+                  <div className="space-y-3 mt-6">
+                    <button onClick={handleCreateAccount} className="w-full bg-primary text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 hover:opacity-95 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 text-base">
+                      Create Account & Proceed
+                      <ArrowRight className="w-5 h-5" />
+                    </button>
+
+                    <button onClick={handleStartTrial} className="w-full bg-amber-500/10 border border-amber-500/30 text-amber-900 font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 hover:bg-amber-500/20 transition-all text-sm">
+                      <Sparkles className="w-4 h-4 text-amber-600" />
+                      Start 7-Day Free Trial
+                    </button>
+                  </div>
                 </>
               )}
 
@@ -178,10 +234,10 @@ export default function CheckoutPage() {
                       </div>
                       <h3 className="font-extrabold text-lg text-emerald-800 font-headline">CheckBook Pro Activated!</h3>
                       <p className="text-xs text-emerald-700 leading-relaxed font-medium">
-                        Your lifetime software ownership license is active for <strong>{email}</strong>.
+                        Your software license is active for <strong>{email || 'your account'}</strong>.
                       </p>
                       <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold uppercase tracking-wider">
-                        <Award className="w-4 h-4" /> Lifetime Ownership Validated
+                        <Award className="w-4 h-4" /> {isFreeTrialActive() ? '7-Day Free Trial Active' : 'Lifetime Ownership Validated'}
                       </div>
 
                       <div className="pt-4 space-y-2">
@@ -197,7 +253,7 @@ export default function CheckoutPage() {
                         <ShieldCheck className="w-6 h-6 flex-shrink-0" />
                         <div>
                           <p className="font-bold text-sm">Account Secured!</p>
-                          <p className="text-xs opacity-80">Choose your Mobile Money provider to pay via Pesapal.</p>
+                          <p className="text-xs opacity-80">Choose your Mobile Money provider to complete payment.</p>
                         </div>
                       </div>
 
@@ -235,7 +291,7 @@ export default function CheckoutPage() {
                                 : 'bg-surface-container border-outline-variant/20 text-on-surface-variant hover:bg-surface-container-high'
                             }`}
                           >
-                            <div className="w-5 h-5 bg-red-600 rounded-full flex items-center justify-center text-white text-[10px] font-black">A</div>
+                            <img src={airtelLogo} alt="Airtel Money" className="h-6 object-contain" />
                             Airtel Money
                           </button>
                         </div>
@@ -258,49 +314,60 @@ export default function CheckoutPage() {
                         </div>
                       </div>
 
-                      <button
-                        type="button"
-                        disabled={isProcessingPayment}
-                        onClick={async () => {
-                          if (!phone || phone.length < 9) {
-                            setPesapalError('Please enter a valid Mobile Money phone number.');
-                            return;
-                          }
-                          setPesapalError('');
-                          setIsProcessingPayment(true);
-                          const finalAmount = isApplied ? 203000 : 290000;
-                          try {
-                            const res = await initiatePesapalPayment({
-                              amount: finalAmount,
-                              currency: 'UGX',
-                              description: `CheckBook Pro Ownership License${isApplied ? ' (Promo 30% Off)' : ''}`,
-                              email,
-                              phoneNumber: phone,
-                              paymentMethod: paymentProvider,
-                              itemType: 'ownership',
-                              promoCode: isApplied ? 'CHECKBOOK2026' : undefined,
-                            });
-
-                            if (res.redirectUrl) {
-                              window.location.href = res.redirectUrl;
+                      <div className="space-y-3">
+                        <button
+                          type="button"
+                          disabled={isProcessingPayment}
+                          onClick={async () => {
+                            if (!phone || phone.length < 9) {
+                              setPesapalError('Please enter a valid Mobile Money phone number.');
+                              return;
                             }
-                          } catch (err) {
-                            setPesapalError('Failed to initiate Pesapal payment. Please try again.');
-                          } finally {
-                            setIsProcessingPayment(false);
-                          }
-                        }}
-                        className="w-full bg-primary text-white font-bold py-5 rounded-xl flex items-center justify-center gap-3 hover:opacity-95 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 text-lg mt-4"
-                      >
-                        {isProcessingPayment ? (
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                        ) : (
-                          <>
-                            Pay {isApplied ? '203,000' : '290,000'} UGX with Pesapal
-                            <ArrowRight className="w-5 h-5" />
-                          </>
-                        )}
-                      </button>
+                            setPesapalError('');
+                            setIsProcessingPayment(true);
+                            const finalAmount = isApplied ? 203000 : 290000;
+                            try {
+                              const res = await initiatePesapalPayment({
+                                amount: finalAmount,
+                                currency: 'UGX',
+                                description: `CheckBook Pro Ownership License${isApplied ? ' (Promo 30% Off)' : ''}`,
+                                email,
+                                phoneNumber: phone,
+                                paymentMethod: paymentProvider,
+                                itemType: 'ownership',
+                                promoCode: isApplied ? 'CHECKBOOK2026' : undefined,
+                              });
+
+                              if (res.redirectUrl) {
+                                window.location.href = res.redirectUrl;
+                              }
+                            } catch (err) {
+                              setPesapalError('Failed to initiate payment. Please try again.');
+                            } finally {
+                              setIsProcessingPayment(false);
+                            }
+                          }}
+                          className="w-full bg-primary text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 hover:opacity-95 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 text-base"
+                        >
+                          {isProcessingPayment ? (
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                          ) : (
+                            <>
+                              Pay {isApplied ? '203,000' : '290,000'} UGX
+                              <ArrowRight className="w-5 h-5" />
+                            </>
+                          )}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={handleStartTrial}
+                          className="w-full bg-amber-500/10 border border-amber-500/30 text-amber-900 font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 hover:bg-amber-500/20 transition-all text-sm"
+                        >
+                          <Sparkles className="w-4 h-4 text-amber-600" />
+                          Start 7-Day Free Trial Instead
+                        </button>
+                      </div>
 
                       {/* Manual Transfer Fallback */}
                       <details className="text-xs text-on-surface-variant cursor-pointer pt-2">
@@ -318,8 +385,12 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              <div className="flex items-center justify-center gap-4 pt-4">
-                <img src={mtnLogo} alt="MTN MoMo" className="h-12 object-contain" />
+              <div className="flex flex-col items-center gap-2 pt-4">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-outline">Powered by</span>
+                <div className="flex items-center justify-center gap-6">
+                  <img src={mtnLogo} alt="MTN MoMo" className="h-10 object-contain" />
+                  <img src={airtelLogo} alt="Airtel Money" className="h-10 object-contain" />
+                </div>
               </div>
             </div>
           </div>

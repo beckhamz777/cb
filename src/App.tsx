@@ -10,6 +10,7 @@ import CheckoutPage from './pages/CheckoutPage';
 import SupportPage from './pages/SupportPage';
 import CloudBackupPage from './pages/CloudBackupPage';
 import PaymentCallbackPage from './pages/PaymentCallbackPage';
+import TermsPage from './pages/TermsPage';
 
 function AppContent() {
   return (
@@ -26,6 +27,7 @@ function AppContent() {
           <Route path="/support" element={<SupportPage />} />
           <Route path="/cloud-backup" element={<CloudBackupPage />} />
           <Route path="/payment/callback" element={<PaymentCallbackPage />} />
+          <Route path="/terms" element={<TermsPage />} />
           {/* Fallback for other links */}
           <Route path="*" element={<Home />} />
         </Routes>

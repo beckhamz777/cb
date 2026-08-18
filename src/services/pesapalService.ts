@@ -160,7 +160,35 @@ export function isCloudSubscriptionActive(): boolean {
  */
 export function isOwnershipActive(): boolean {
   try {
-    return localStorage.getItem('cb_ownership_pro_active') === 'true';
+    return localStorage.getItem('cb_ownership_pro_active') === 'true' || isFreeTrialActive();
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Starts a 7-day free trial for the user
+ */
+export function startFreeTrial(): { active: boolean; expiry: string } {
+  const expiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+  localStorage.setItem('cb_trial_active', 'true');
+  localStorage.setItem('cb_trial_expiry', expiry);
+  return { active: true, expiry };
+}
+
+/**
+ * Checks if 7-day free trial is currently active
+ */
+export function isFreeTrialActive(): boolean {
+  try {
+    const active = localStorage.getItem('cb_trial_active') === 'true';
+    const expiry = localStorage.getItem('cb_trial_expiry');
+    if (!active) return false;
+    if (expiry && new Date(expiry) < new Date()) {
+      localStorage.setItem('cb_trial_active', 'false');
+      return false;
+    }
+    return true;
   } catch {
     return false;
   }
