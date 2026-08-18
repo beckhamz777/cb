@@ -21,12 +21,24 @@ import {
 import { Link } from 'react-router-dom';
 import { supabase } from '@/src/lib/supabase';
 import mtnLogo from '@/src/assets/mtn momo.png';
+import { initiatePesapalPayment, isCloudSubscriptionActive } from '@/src/services/pesapalService';
 
 export default function CloudBackupPage() {
   const [billingCycle, setBillingCycle] = useState<'monthly'>('monthly');
   const [email, setEmail] = useState('');
   const [user, setUser] = useState<any>(null);
   const [isAuthChecking, setIsAuthChecking] = useState(true);
+
+  // Pesapal Payment States
+  const [phone, setPhone] = useState('');
+  const [paymentProvider, setPaymentProvider] = useState<'MTN_MOMO' | 'AIRTEL_MONEY'>('MTN_MOMO');
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(isCloudSubscriptionActive());
+  const [pesapalError, setPesapalError] = useState('');
+
+  useEffect(() => {
+    setPaymentSuccess(isCloudSubscriptionActive());
+  }, []);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -170,31 +182,139 @@ export default function CloudBackupPage() {
                         <ArrowRight className="w-5 h-5" />
                       </Link>
                     </div>
-                  ) : (
+                  ) : paymentSuccess ? (
                     <div className="space-y-6 pt-4">
-                      <div className="bg-surface-container-high rounded-xl p-6 text-center space-y-4 shadow-inner border border-outline-variant/20">
-                        <p className="text-on-surface-variant text-sm font-medium">
-                          Send <span className="font-bold text-primary">15,000 UGX</span> to the MTN Number below:
-                        </p>
-                        <div className="text-4xl font-black font-headline tracking-widest text-primary my-4">
-                          076 031 5703
+                      <div className="bg-emerald-50 text-emerald-900 border border-emerald-200 rounded-2xl p-6 text-center space-y-3">
+                        <div className="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto shadow-md">
+                          <CheckCircle2 className="w-8 h-8" />
                         </div>
-                        <p className="text-xs text-outline uppercase tracking-wider font-bold bg-white inline-block px-3 py-1 rounded-full border border-outline-variant/30 shadow-sm">
-                          Name: Oworinawe Prince Beckham
+                        <h3 className="font-extrabold text-lg text-emerald-800 font-headline">Cloud Vaulting Active!</h3>
+                        <p className="text-xs text-emerald-700 leading-relaxed font-medium">
+                          Your monthly cloud subscription is active. Multi-device sync is enabled for your account (<strong>{email}</strong>).
                         </p>
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold uppercase tracking-wider">
+                          <ShieldCheck className="w-4 h-4" /> Validated via Pesapal
+                        </div>
                       </div>
 
-                      <div className="flex items-center gap-4 bg-secondary-container/50 text-on-secondary-container p-5 rounded-xl border border-secondary-container">
-                        <MessageCircle className="w-8 h-8 flex-shrink-0 text-primary" />
-                        <p className="text-sm font-medium leading-relaxed">
-                          After sending, please WhatsApp your receipt footprint and your account email <strong>{email}</strong> to <strong className="text-primary text-base">076 031 5703</strong> for immediate cloud activation.
-                        </p>
-                      </div>
-
-                      <Link to="/dashboard" className="w-full bg-primary text-white font-bold py-5 rounded-xl flex items-center justify-center gap-3 hover:opacity-95 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 text-lg mt-6">
-                        Return to Dashboard
+                      <Link to="/" className="w-full bg-primary text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 text-base">
+                        Return to Vault Overview
                         <ArrowRight className="w-5 h-5" />
                       </Link>
+                    </div>
+                  ) : (
+                    <div className="space-y-6 pt-2">
+                      {pesapalError && (
+                        <div className="p-3 bg-red-50 text-red-600 text-xs rounded-lg font-medium">
+                          {pesapalError}
+                        </div>
+                      )}
+
+                      {/* Payment Provider Selection */}
+                      <div className="space-y-2">
+                        <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">
+                          Select Mobile Money Provider
+                        </label>
+                        <div className="grid grid-cols-2 gap-3">
+                          <button
+                            type="button"
+                            onClick={() => setPaymentProvider('MTN_MOMO')}
+                            className={`p-3 rounded-xl border flex items-center justify-center gap-2 font-bold text-xs transition-all ${
+                              paymentProvider === 'MTN_MOMO'
+                                ? 'bg-amber-50 border-amber-400 text-amber-900 shadow-sm ring-2 ring-amber-400/30'
+                                : 'bg-surface-container border-outline-variant/20 text-on-surface-variant hover:bg-surface-container-high'
+                            }`}
+                          >
+                            <img src={mtnLogo} alt="MTN MoMo" className="h-6 object-contain" />
+                            MTN MoMo
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => setPaymentProvider('AIRTEL_MONEY')}
+                            className={`p-3 rounded-xl border flex items-center justify-center gap-2 font-bold text-xs transition-all ${
+                              paymentProvider === 'AIRTEL_MONEY'
+                                ? 'bg-red-50 border-red-500 text-red-900 shadow-sm ring-2 ring-red-500/30'
+                                : 'bg-surface-container border-outline-variant/20 text-on-surface-variant hover:bg-surface-container-high'
+                            }`}
+                          >
+                            <div className="w-5 h-5 bg-red-600 rounded-full flex items-center justify-center text-white text-[10px] font-black">A</div>
+                            Airtel Money
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Phone Number Input */}
+                      <div className="space-y-2">
+                        <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">
+                          Mobile Money Number
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="tel"
+                            placeholder="0770000000 / 0750000000"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            className="w-full bg-surface-container-high border-none rounded-xl px-4 py-3.5 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary/20 transition-all outline-none font-medium text-sm"
+                          />
+                          <PhoneIcon className="absolute right-4 top-1/2 -translate-y-1/2 text-outline w-4 h-4" />
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        disabled={isProcessingPayment}
+                        onClick={async () => {
+                          if (!phone || phone.length < 9) {
+                            setPesapalError('Please enter a valid Mobile Money phone number.');
+                            return;
+                          }
+                          setPesapalError('');
+                          setIsProcessingPayment(true);
+                          try {
+                            const res = await initiatePesapalPayment({
+                              amount: 15000,
+                              currency: 'UGX',
+                              description: 'CheckBook Cloud Backup Monthly Subscription',
+                              email,
+                              phoneNumber: phone,
+                              paymentMethod: paymentProvider,
+                              itemType: 'subscription',
+                            });
+
+                            // Redirect to Pesapal checkout or handle callback
+                            if (res.redirectUrl) {
+                              window.location.href = res.redirectUrl;
+                            }
+                          } catch (err) {
+                            setPesapalError('Failed to initiate Pesapal payment. Please try again.');
+                          } finally {
+                            setIsProcessingPayment(false);
+                          }
+                        }}
+                        className="w-full bg-primary text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 hover:opacity-95 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 text-base"
+                      >
+                        {isProcessingPayment ? (
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                          <>
+                            Pay 15,000 UGX with Pesapal
+                            <ArrowRight className="w-5 h-5" />
+                          </>
+                        )}
+                      </button>
+
+                      {/* Manual Transfer Fallback */}
+                      <details className="text-xs text-on-surface-variant cursor-pointer pt-2">
+                        <summary className="font-bold text-outline hover:text-primary transition-colors">
+                          Need manual USSD transfer instructions?
+                        </summary>
+                        <div className="mt-3 p-4 bg-surface-container rounded-xl space-y-2 text-left">
+                          <p className="font-semibold text-primary">Send 15,000 UGX to MTN: 076 031 5703</p>
+                          <p className="text-[11px] text-outline">Name: Oworinawe Prince Beckham</p>
+                          <p className="text-[11px] text-outline">WhatsApp receipt footprint to 076 031 5703.</p>
+                        </div>
+                      </details>
                     </div>
                   )}
 

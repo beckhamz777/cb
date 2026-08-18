@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { ShieldCheck, Smartphone, Tag, ArrowRight, CheckCircle2, Lock, Check, Loader2, Mail, Phone, MessageCircle } from 'lucide-react';
+import { ShieldCheck, Smartphone, Tag, ArrowRight, CheckCircle2, Lock, Check, Loader2, Mail, Phone as PhoneIcon, MessageCircle, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/src/lib/supabase';
 import mtnLogo from '@/src/assets/mtn momo.png';
+import { initiatePesapalPayment, isOwnershipActive } from '@/src/services/pesapalService';
 
 export default function CheckoutPage() {
   const [promoCode, setPromoCode] = useState('');
@@ -12,6 +13,13 @@ export default function CheckoutPage() {
   const [password, setPassword] = useState('');
   const [step, setStep] = useState<'signup' | 'creating_account' | 'payment'>('signup');
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Pesapal Mobile Money States
+  const [phone, setPhone] = useState('');
+  const [paymentProvider, setPaymentProvider] = useState<'MTN_MOMO' | 'AIRTEL_MONEY'>('MTN_MOMO');
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(isOwnershipActive());
+  const [pesapalError, setPesapalError] = useState('');
 
   const handleApply = () => {
     if (promoCode.trim().toUpperCase() === 'CHECKBOOK2026') {
@@ -163,37 +171,150 @@ export default function CheckoutPage() {
 
               {step === 'payment' && (
                 <div className="pt-6 border-t border-outline-variant/10 space-y-6">
-                  <div className="bg-emerald-500/10 text-emerald-600 p-4 rounded-lg flex gap-3 items-center border border-emerald-500/20">
-                    <ShieldCheck className="w-6 h-6 flex-shrink-0" />
-                    <div>
-                      <p className="font-bold text-sm">Account Secured!</p>
-                      <p className="text-xs opacity-80">Please complete your manual payment to activate CheckBook Pro.</p>
+                  {paymentSuccess ? (
+                    <div className="bg-emerald-50 text-emerald-900 border border-emerald-200 rounded-2xl p-6 text-center space-y-3">
+                      <div className="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto shadow-md">
+                        <CheckCircle2 className="w-8 h-8" />
+                      </div>
+                      <h3 className="font-extrabold text-lg text-emerald-800 font-headline">CheckBook Pro Activated!</h3>
+                      <p className="text-xs text-emerald-700 leading-relaxed font-medium">
+                        Your lifetime software ownership license is active for <strong>{email}</strong>.
+                      </p>
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold uppercase tracking-wider">
+                        <Award className="w-4 h-4" /> Lifetime Ownership Validated
+                      </div>
+
+                      <div className="pt-4 space-y-2">
+                        <Link to="/windows" className="w-full bg-primary text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 text-base">
+                          Download Desktop App
+                          <ArrowRight className="w-5 h-5" />
+                        </Link>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="space-y-6">
+                      <div className="bg-emerald-500/10 text-emerald-600 p-4 rounded-lg flex gap-3 items-center border border-emerald-500/20">
+                        <ShieldCheck className="w-6 h-6 flex-shrink-0" />
+                        <div>
+                          <p className="font-bold text-sm">Account Secured!</p>
+                          <p className="text-xs opacity-80">Choose your Mobile Money provider to pay via Pesapal.</p>
+                        </div>
+                      </div>
 
-                  <div className="bg-surface-container-high rounded-xl p-6 text-center space-y-4 shadow-inner border border-outline-variant/20">
-                    <p className="text-on-surface-variant text-sm font-medium">
-                      Send <span className="font-bold text-primary">{isApplied ? '203,000' : '290,000'} UGX</span> to the MTN Number below:
-                    </p>
-                    <div className="text-4xl font-black font-headline tracking-widest text-primary my-4">
-                      076 031 5703
+                      {pesapalError && (
+                        <div className="p-3 bg-red-50 text-red-600 text-xs rounded-lg font-medium">
+                          {pesapalError}
+                        </div>
+                      )}
+
+                      {/* Payment Provider Selection */}
+                      <div className="space-y-2">
+                        <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">
+                          Select Mobile Money Provider
+                        </label>
+                        <div className="grid grid-cols-2 gap-3">
+                          <button
+                            type="button"
+                            onClick={() => setPaymentProvider('MTN_MOMO')}
+                            className={`p-3 rounded-xl border flex items-center justify-center gap-2 font-bold text-xs transition-all ${
+                              paymentProvider === 'MTN_MOMO'
+                                ? 'bg-amber-50 border-amber-400 text-amber-900 shadow-sm ring-2 ring-amber-400/30'
+                                : 'bg-surface-container border-outline-variant/20 text-on-surface-variant hover:bg-surface-container-high'
+                            }`}
+                          >
+                            <img src={mtnLogo} alt="MTN MoMo" className="h-6 object-contain" />
+                            MTN MoMo
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => setPaymentProvider('AIRTEL_MONEY')}
+                            className={`p-3 rounded-xl border flex items-center justify-center gap-2 font-bold text-xs transition-all ${
+                              paymentProvider === 'AIRTEL_MONEY'
+                                ? 'bg-red-50 border-red-500 text-red-900 shadow-sm ring-2 ring-red-500/30'
+                                : 'bg-surface-container border-outline-variant/20 text-on-surface-variant hover:bg-surface-container-high'
+                            }`}
+                          >
+                            <div className="w-5 h-5 bg-red-600 rounded-full flex items-center justify-center text-white text-[10px] font-black">A</div>
+                            Airtel Money
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Phone Number Input */}
+                      <div className="space-y-2">
+                        <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider">
+                          Mobile Money Phone Number
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="tel"
+                            placeholder="0770000000 / 0750000000"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            className="w-full bg-surface-container-high border-none rounded-xl px-4 py-3.5 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary/20 transition-all outline-none font-medium text-sm"
+                          />
+                          <PhoneIcon className="absolute right-4 top-1/2 -translate-y-1/2 text-outline w-4 h-4" />
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        disabled={isProcessingPayment}
+                        onClick={async () => {
+                          if (!phone || phone.length < 9) {
+                            setPesapalError('Please enter a valid Mobile Money phone number.');
+                            return;
+                          }
+                          setPesapalError('');
+                          setIsProcessingPayment(true);
+                          const finalAmount = isApplied ? 203000 : 290000;
+                          try {
+                            const res = await initiatePesapalPayment({
+                              amount: finalAmount,
+                              currency: 'UGX',
+                              description: `CheckBook Pro Ownership License${isApplied ? ' (Promo 30% Off)' : ''}`,
+                              email,
+                              phoneNumber: phone,
+                              paymentMethod: paymentProvider,
+                              itemType: 'ownership',
+                              promoCode: isApplied ? 'CHECKBOOK2026' : undefined,
+                            });
+
+                            if (res.redirectUrl) {
+                              window.location.href = res.redirectUrl;
+                            }
+                          } catch (err) {
+                            setPesapalError('Failed to initiate Pesapal payment. Please try again.');
+                          } finally {
+                            setIsProcessingPayment(false);
+                          }
+                        }}
+                        className="w-full bg-primary text-white font-bold py-5 rounded-xl flex items-center justify-center gap-3 hover:opacity-95 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 text-lg mt-4"
+                      >
+                        {isProcessingPayment ? (
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                          <>
+                            Pay {isApplied ? '203,000' : '290,000'} UGX with Pesapal
+                            <ArrowRight className="w-5 h-5" />
+                          </>
+                        )}
+                      </button>
+
+                      {/* Manual Transfer Fallback */}
+                      <details className="text-xs text-on-surface-variant cursor-pointer pt-2">
+                        <summary className="font-bold text-outline hover:text-primary transition-colors">
+                          Need manual USSD transfer instructions?
+                        </summary>
+                        <div className="mt-3 p-4 bg-surface-container rounded-xl space-y-2 text-left">
+                          <p className="font-semibold text-primary">Send {isApplied ? '203,000' : '290,000'} UGX to MTN: 076 031 5703</p>
+                          <p className="text-[11px] text-outline">Name: Oworinawe Prince Beckham</p>
+                          <p className="text-[11px] text-outline">WhatsApp receipt footprint to 076 031 5703.</p>
+                        </div>
+                      </details>
                     </div>
-                    <p className="text-xs text-outline uppercase tracking-wider font-bold bg-white inline-block px-3 py-1 rounded-full border border-outline-variant/30 shadow-sm">
-                      Name: Oworinawe Prince Beckham
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-4 bg-secondary-container/50 text-on-secondary-container p-5 rounded-xl border border-secondary-container">
-                    <MessageCircle className="w-8 h-8 flex-shrink-0 text-primary" />
-                    <p className="text-sm font-medium leading-relaxed">
-                      After sending, please WhatsApp your receipt footprint and your account email <strong>{email}</strong> to <strong className="text-primary text-base">076 031 5703</strong> for immediate activation.
-                    </p>
-                  </div>
-
-                  <Link to="/dashboard" className="w-full bg-primary text-white font-bold py-5 rounded-xl flex items-center justify-center gap-3 hover:opacity-95 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 text-lg mt-6">
-                    Proceed to Dashboard
-                    <ArrowRight className="w-5 h-5" />
-                  </Link>
+                  )}
                 </div>
               )}
 
