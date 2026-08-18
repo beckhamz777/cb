@@ -102,7 +102,7 @@ export function Footer() {
             CheckBook
           </div>
           <p className="text-outline-variant/60 text-xs uppercase tracking-widest max-sm">
-            © 2026 METO ORGANATION SYSTEM. All rights reserved. Secure Architectural Vaulting.
+            © 2026 CHECKBOOK COMPANY LIMITED. All rights reserved. Secure Architectural Vaulting.
           </p>
         </div>
         
