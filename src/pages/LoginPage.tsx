@@ -101,7 +101,7 @@ export default function LoginPage() {
           
           <div className="pt-8 text-center border-t border-outline-variant/10 mt-8">
             <p className="text-sm text-on-surface-variant">
-              Don't have an account? <Link to="/checkout" className="text-primary font-bold hover:underline ml-1">Purchase License</Link>
+              Don't have an account? <Link to="/checkout" className="text-primary font-bold hover:underline ml-1">Purchase License & Sign Up</Link>
             </p>
           </div>
         </motion.div>

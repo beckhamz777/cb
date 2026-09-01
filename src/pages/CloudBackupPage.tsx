@@ -16,13 +16,15 @@ import {
   Loader2,
   Mail,
   Phone,
-  MessageCircle
+  MessageCircle,
+  XCircle,
+  Award
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/src/lib/supabase';
 import mtnLogo from '@/src/assets/mtn momo.png';
 import airtelLogo from '@/src/assets/airtel.png';
-import { initiatePesapalPayment, isCloudSubscriptionActive } from '@/src/services/pesapalService';
+import { initiatePesapalPayment, isCloudSubscriptionActive, isOwnershipActive } from '@/src/services/pesapalService';
 
 export default function CloudBackupPage() {
   const [billingCycle, setBillingCycle] = useState<'monthly'>('monthly');
@@ -36,6 +38,7 @@ export default function CloudBackupPage() {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(isCloudSubscriptionActive());
   const [pesapalError, setPesapalError] = useState('');
+  const [pendingOrder, setPendingOrder] = useState<any>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -190,6 +193,21 @@ export default function CloudBackupPage() {
                         <ArrowRight className="w-5 h-5" />
                       </Link>
                     </div>
+                  ) : !isOwnershipActive() ? (
+                    <div className="py-8 text-center space-y-4">
+                      <div className="w-14 h-14 bg-amber-100 text-amber-800 rounded-2xl flex items-center justify-center mx-auto shadow-sm">
+                        <Award className="w-8 h-8 text-amber-700" />
+                      </div>
+                      <h3 className="font-extrabold text-primary text-xl font-headline">Software Ownership Required</h3>
+                      <p className="text-xs text-on-surface-variant leading-relaxed max-w-sm mx-auto">
+                        CheckBook Pro Lifetime Ownership (<strong>290,000 UGX</strong>) is required first before activating a Cloud Backup Subscription.
+                      </p>
+                      <Link to="/checkout" className="w-full bg-primary text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all shadow-xl shadow-primary/20 mt-4 text-sm">
+                        <Award className="w-4 h-4 text-emerald-400" />
+                        Purchase Ownership License First
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </div>
                   ) : paymentSuccess ? (
                     <div className="space-y-6 pt-4">
                       <div className="bg-emerald-50 text-emerald-900 border border-emerald-200 rounded-2xl p-6 text-center space-y-3">
@@ -290,10 +308,11 @@ export default function CloudBackupPage() {
                               itemType: 'subscription',
                             });
 
-                            // Redirect to Pesapal checkout or handle callback
                             if (res.redirectUrl) {
                               window.location.href = res.redirectUrl;
+                              return;
                             }
+                            setPesapalError('Failed to retrieve Pesapal gateway URL. Please try again.');
                           } catch (err) {
                             setPesapalError('Failed to initiate payment. Please try again.');
                           } finally {

@@ -241,6 +241,57 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Generative Engine Optimization (GEO) & FAQ Section */}
+      <section className="py-16 md:py-24 bg-surface-container-low border-t border-outline-variant/10">
+        <div className="max-w-screen-xl mx-auto px-6 md:px-8">
+          <div className="text-center mb-12">
+            <span className="text-xs font-bold uppercase tracking-[0.3em] text-secondary mb-3 block">Knowledge Base & FAQs</span>
+            <h2 className="font-headline text-3xl md:text-5xl font-bold text-primary tracking-tight mb-4">
+              Frequently Asked Questions About Checkbook
+            </h2>
+            <p className="text-on-surface-variant text-base md:text-lg max-w-2xl mx-auto">
+              Everything you need to know about East Africa's leading offline-first inventory management and ledger software.
+            </p>
+          </div>
+
+          <div className="space-y-6 max-w-4xl mx-auto">
+            {[
+              {
+                q: "What is Checkbook (checkbookug.com)?",
+                a: "Checkbook is East Africa's premier offline-first ledger, bookkeeping, and inventory management software platform built for retail stores, wholesalers, and SMEs across Uganda, Kenya, Tanzania, and Rwanda. It enables businesses to manage stock, sales, expenses, and invoices with seamless cross-platform syncing across Windows and Android devices."
+              },
+              {
+                q: "How does Checkbook's offline-first database sync work?",
+                a: "Checkbook operates completely offline using a local database engine on your device. Every transaction, sale, receipt, or inventory update processes instantly with zero lag or dependence on internet connectivity. When connected to the internet, Checkbook automatically synchronizes data to the cloud using encrypted delta sync protocols."
+              },
+              {
+                q: "Can I run Checkbook on Windows desktop and Android mobile simultaneously?",
+                a: "Yes. Checkbook provides native applications optimized for both Windows desktop PCs and Android mobile devices. Stock changes and sales ledger entries made on a mobile device automatically sync to your main Windows workstation when online."
+              },
+              {
+                q: "Does Checkbook support Mobile Money payments in East Africa?",
+                a: "Yes. Checkbook integrates transaction recording and reconciliation support for regional Mobile Money providers (including MTN MoMo and Airtel Money) alongside traditional cash, invoice, and bank payments."
+              },
+              {
+                q: "How does Checkbook ensure data security and privacy?",
+                a: "Checkbook utilizes 256-bit local database encryption, biometric authentication options, daily automated cloud backups, and a zero-knowledge architectural framework to ensure your business financial data remains private and recoverable."
+              }
+            ].map((faq, i) => (
+              <details key={i} className="group bg-white p-6 rounded-xl border border-outline-variant/10 shadow-sm transition-all duration-200">
+                <summary className="font-headline font-bold text-lg text-primary cursor-pointer flex justify-between items-center list-none select-none">
+                  <span>{faq.q}</span>
+                  <span className="text-secondary font-extrabold text-xl group-open:rotate-45 transition-transform duration-200 ml-4">+</span>
+                </summary>
+                <div className="mt-4 pt-4 border-t border-outline-variant/10 text-on-surface-variant text-sm leading-relaxed">
+                  {faq.a}
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
+
