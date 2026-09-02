@@ -18,7 +18,8 @@ export function Navbar() {
   ];
 
   return (
-    <nav className="fixed top-0 w-full z-50 glass-nav border-b border-outline-variant/10">
+    <>
+      <nav className="fixed top-0 w-full z-50 glass-nav border-b border-outline-variant/10">
       <div className="max-w-screen-2xl mx-auto px-6 md:px-8 py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 text-2xl font-bold tracking-tighter text-primary font-headline">
           <img 
@@ -87,6 +88,7 @@ export function Navbar() {
       )}
     </nav>
     <UpdateBanner />
+    </>
   );
 }
 
