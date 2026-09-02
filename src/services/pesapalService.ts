@@ -28,9 +28,9 @@ export interface PesapalTransactionResult {
 // Pesapal API v3 Endpoints
 export const PESAPAL_CONFIG = {
   BASE_URL: import.meta.env.DEV ? '/pesapal-api' : 'https://pay.pesapal.com/v3',
-  CONSUMER_KEY: import.meta.env.VITE_PESAPAL_CONSUMER_KEY || 'TDpigBOOhs+zAl8cwH2Fl82jJGyD8xev',
-  CONSUMER_SECRET: import.meta.env.VITE_PESAPAL_CONSUMER_SECRET || '1KpqkfsMaihIcOlhnBo/gBZ5smw=',
-  IPN_ID: import.meta.env.VITE_PESAPAL_IPN_ID || '6a860413-dd1e-4429-802d-da01adada02d',
+  CONSUMER_KEY: import.meta.env.VITE_PESAPAL_CONSUMER_KEY as string,
+  CONSUMER_SECRET: import.meta.env.VITE_PESAPAL_CONSUMER_SECRET as string,
+  IPN_ID: import.meta.env.VITE_PESAPAL_IPN_ID as string,
 };
 
 /**

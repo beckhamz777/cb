@@ -18,12 +18,19 @@ app.use(authRoutes);
 // Environment & Configuration Setup
 const CONFIG = {
   BASE_URL: process.env.PESAPAL_BASE_URL || 'https://pay.pesapal.com/v3',
-  CONSUMER_KEY: process.env.PESAPAL_CONSUMER_KEY || 'TDpigBOOhs+zAl8cwH2Fl82jJGyD8xev',
-  CONSUMER_SECRET: process.env.PESAPAL_CONSUMER_SECRET || '1KpqkfsMaihIcOlhnBo/gBZ5smw=',
-  IPN_ID: process.env.PESAPAL_IPN_ID || '6a860413-dd1e-4429-802d-da01adada02d',
+  CONSUMER_KEY: process.env.PESAPAL_CONSUMER_KEY,
+  CONSUMER_SECRET: process.env.PESAPAL_CONSUMER_SECRET,
+  IPN_ID: process.env.PESAPAL_IPN_ID,
   CALLBACK_URL: process.env.PESAPAL_CALLBACK_URL || 'https://checkbook.co.ug/#/payment/callback',
   IPN_URL: process.env.PESAPAL_IPN_URL || 'https://checkbook.co.ug/api/payments/webhook/pesapal',
 };
+
+if (!CONFIG.CONSUMER_KEY || !CONFIG.CONSUMER_SECRET || !CONFIG.IPN_ID) {
+  throw new Error(
+    'Missing required Pesapal env vars: PESAPAL_CONSUMER_KEY, PESAPAL_CONSUMER_SECRET, PESAPAL_IPN_ID. ' +
+    'Copy .env.example to .env and fill in your credentials.'
+  );
+}
 
 // In-Memory Token Cache
 let cachedToken = null;

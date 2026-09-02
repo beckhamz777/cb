@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { User, Menu, X, Search, ShieldCheck, Shield, Lock } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import logo from '@/src/assets/logo.png';
+import { UpdateBanner } from '@/src/components/UpdateBanner';
 
 export function Navbar() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -85,6 +86,7 @@ export function Navbar() {
         </div>
       )}
     </nav>
+    <UpdateBanner />
   );
 }
 
